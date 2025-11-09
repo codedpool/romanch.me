@@ -1,11 +1,12 @@
 [
   {
-    "id": "wealthwise",
-    "title": "WealthWise",
-    "description": "A comprehensive investment management platform designed to help users track, analyze, and optimize their investments in mutual funds, cryptocurrencies, and other financial instruments. Built during CodeZen with AI-driven insights and real-time data.",
-    "shortDescription": "AI-powered investment management platform for tracking mutual funds and crypto with real-time insights.",
-  "demoUrl": "https://wealthwise-mw7u.onrender.com/",
-    "codeUrl": "https://github.com/codedpool/wealthwise",
+    "id": "wealthpulse",
+  "title": "WealthPulse",
+  "image": "wealthpulse.png",
+  "description": "A comprehensive investment management platform designed to help users track, analyze, and optimize their investments in mutual funds, cryptocurrencies, and other financial instruments. Built during HackCBS8.0 with AI-driven insights and real-time data.",
+  "shortDescription": "AI-powered investment management platform for tracking mutual funds and crypto with real-time insights.",
+  "demoUrl": "https://wealthpulse-nu.vercel.app/",
+    "codeUrl": "https://github.com/codedpool/wealthpulse",
     "technologies": ["React", "FastAPI", "MongoDB", "AI/ML", "TailwindCSS"],
     "category": "FinTech",
     "featured": true,
