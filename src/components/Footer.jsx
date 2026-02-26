@@ -61,7 +61,7 @@ export default function Footer() {
       {/* Bottom Footer Bar */}
       <div className="py-6 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-4">
-          <div className="text-gray-400 text-sm">Copyright 2025 ©romanchroshansingh</div>
+          <div className="text-gray-400 text-sm">Copyright 2026 ©romanchroshansingh</div>
 
           <div className="text-sm italic text-gray-300">small town kid with big ambitions</div>
         </div>

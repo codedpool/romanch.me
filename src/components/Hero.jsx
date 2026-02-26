@@ -43,9 +43,15 @@ export default function Hero() {
           >
             About me
           </button>
-          {/* <Link href="#blog" className="hover:text-gray-300 transition-colors">
+          <button 
+            onClick={() => scrollToSection('experience')} 
+            className="hover:text-gray-300 transition-colors cursor-pointer"
+          >
+            Experience
+          </button>
+          <Link href="https://dev.to/codedpool" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">
             Blog
-          </Link> */}
+          </Link>
           {/* <Link href="#faq" className="hover:text-gray-300 transition-colors">
             FAQ
           </Link> */}
@@ -71,7 +77,7 @@ export default function Hero() {
                 Problem Solver
               </h1>
               <p className="text-gray-300 text-lg leading-relaxed max-w-md">
-                From front-end polish to backend logic, I turn ideas into scalable, real-world solutions—learning fast and building faster.
+               Full-Stack Developer focused on backend systems, real-time infrastructure, and AI integration.
               </p>
             </div>
             

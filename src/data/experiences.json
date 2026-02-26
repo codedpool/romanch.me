@@ -1,0 +1,34 @@
+[
+  {
+    "id": "mlh-coach",
+    "role": "Coach",
+    "company": "Major League Hacking (MLH)",
+    "type": "Part Time · Hackathon Mentorship & Judging",
+    "location": null,
+    "liveUrl": null,
+    "startDate": "January 2026",
+    "endDate": "Present",
+    "current": true,
+    "bullets": [
+      "Contributing to the organization of hackathons, mentoring participants on project development and technical execution, and serving as a judge for evaluating submissions."
+    ]
+  },
+  {
+    "id": "adalabs-intern",
+    "role": "Software Development Intern",
+    "company": "Adalabs & Co.",
+    "type": null,
+    "location": "Hybrid",
+    "liveUrl": "https://teamworks-app.vercel.app",
+    "startDate": "June 2025",
+    "endDate": "July 2025",
+    "current": false,
+    "bullets": [
+      "Engineered backend API routes in Next.js for authentication, CMS operations, and data workflows, supporting 40–50 active users during the initial rollout.",
+      "Implemented secure role-based access control (RBAC) with 3 user roles, protected routes, and session handling for 50+ users.",
+      "Designed database schemas and optimized CRUD operations to enhance API reliability and reduce latency.",
+      "Built the TeamWorks WebApp front-end in Next.js from Figma designs with a 1.5s LCP.",
+      "Integrated front-end components with backend services with a 5-member team."
+    ]
+  }
+]
