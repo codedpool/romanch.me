@@ -31,7 +31,7 @@ export default function Footer() {
             <div className="h-8 w-8 overflow-hidden rounded-full border border-white/20">
               <img src="/portfolio.png" alt="avatar" className="h-full w-full object-cover" />
             </div>
-            <span className="text-lg italic" style={{ fontFamily: 'Kaushan Script, cursive' }}>
+            <span className="text-lg" style={{ fontFamily: 'var(--font-kaushan), cursive' }}>
               Romanch Roshan Singh
             </span>
           </div>

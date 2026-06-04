@@ -24,7 +24,7 @@ export default function Hero() {
           <div className="h-8 w-8 overflow-hidden rounded-full border border-white/20">
             <Image src="/portfolio.png" alt="Romanch Roshan Singh" width={32} height={32} className="h-full w-full object-cover" />
           </div>
-          <span className="text-lg italic md:text-2xl" style={{ fontFamily: 'Kaushan Script, cursive' }}>
+          <span className="text-lg md:text-2xl" style={{ fontFamily: 'var(--font-kaushan), cursive' }}>
             Romanch Roshan Singh
           </span>
         </div>
@@ -65,14 +65,14 @@ export default function Hero() {
               <span className="h-1.5 w-1.5 rounded-full bg-amber-300" />
               Full-Stack · Backend · AI
             </p>
-            <p className="mb-4 text-2xl italic text-gray-200 md:text-3xl" style={{ fontFamily: 'Kaushan Script, cursive' }}>
+            <p className="mb-4 text-2xl text-gray-200 md:text-3xl" style={{ fontFamily: 'var(--font-kaushan), cursive' }}>
               Romanch Roshan Singh
             </p>
-            <h1 className="mb-6 text-6xl font-light leading-[1.0] tracking-tight md:text-7xl">
-              I build systems<br />that actually ship.
+            <h1 className="mb-6 font-serif text-5xl font-light leading-[1.05] md:text-6xl">
+              Full-stack developer,<br />backend at heart.
             </h1>
             <p className="mb-8 max-w-lg text-lg leading-relaxed text-gray-400 md:text-xl">
-              Full-Stack Developer focused on backend systems, real-time infrastructure, and AI integration.
+              Focused on backend systems, real-time infrastructure, and AI integration, with a soft spot for clean, scalable APIs.
             </p>
 
             <div className="flex flex-wrap gap-4">
