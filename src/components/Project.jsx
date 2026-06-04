@@ -1,27 +1,143 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { ExternalLink, Github } from 'lucide-react'
+import Link from 'next/link';
+import { ExternalLink, Github, ArrowUpRight } from 'lucide-react';
 import projects from '@/data/projects.json';
+
+function ImageWithFallback({ id, alt, image }) {
+  const initial = image ? `/${image}` : `/${id}.png`;
+  const [src, setSrc] = useState(initial);
+
+  const handleError = () => {
+    if (src.endsWith('.png')) setSrc(image ? `/${id}.png` : `/${id}.svg`);
+    else if (src.endsWith('.svg')) setSrc('/portfolio.png');
+    else setSrc('/portfolio.png');
+  };
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      onError={handleError}
+      className="absolute inset-0 h-full w-full object-contain p-5 drop-shadow-2xl transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+    />
+  );
+}
+
+// Depth treatment behind a floating (object-contain) image: dotted texture,
+// a soft center spotlight, and a warm glow from the bottom.
+function FrameBackdrop() {
+  return (
+    <>
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1px)',
+          backgroundSize: '18px 18px',
+          maskImage: 'radial-gradient(ellipse at center, black 35%, transparent 78%)',
+          WebkitMaskImage: 'radial-gradient(ellipse at center, black 35%, transparent 78%)',
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse at 50% 35%, rgba(255,255,255,0.08), transparent 60%), radial-gradient(ellipse at 50% 118%, rgba(251,191,36,0.10), transparent 55%)',
+        }}
+      />
+    </>
+  );
+}
+
+function ProjectCard({ project, index }) {
+  const num = String(index + 1).padStart(2, '0');
+  const marker = project.status || (project.featured ? 'Featured' : null);
+
+  const openExternal = (e, url) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.open(url, '_blank');
+  };
+
+  return (
+    <Link
+      href={`/projects/${project.id}`}
+      className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:bg-white/[0.04]"
+    >
+      {/* Framed image */}
+      <div className="relative aspect-[16/10] overflow-hidden border-b border-white/10 bg-[#0a0a0a]">
+        <FrameBackdrop />
+        <ImageWithFallback id={project.id} alt={project.title} image={project.image} />
+        {marker && (
+          <div className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-black/50 px-2.5 py-1 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-300" />
+            <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-gray-200">{marker}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Body */}
+      <div className="flex flex-1 flex-col p-6">
+        <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.18em] text-gray-500">
+          <span>
+            <span className="text-amber-300/80">{num}</span>&nbsp; /&nbsp; {project.category}
+          </span>
+          {project.year && <span>{project.year}</span>}
+        </div>
+
+        <h3 className="mt-4 text-2xl font-light text-white">{project.title}</h3>
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-gray-400">
+          {project.shortDescription || project.description}
+        </p>
+
+        <p className="mt-4 line-clamp-1 font-mono text-xs text-gray-500">
+          {project.technologies.join('  ·  ')}
+        </p>
+
+        <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
+          <span className="inline-flex items-center gap-1.5 text-sm text-gray-300 transition-colors group-hover:text-white">
+            View case study
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </span>
+          <div className="flex items-center gap-1">
+            {project.codeUrl && (
+              <button
+                onClick={(e) => openExternal(e, project.codeUrl)}
+                aria-label="Source code"
+                className="rounded-md p-2 text-gray-500 transition-colors hover:bg-white/5 hover:text-white"
+              >
+                <Github className="h-4 w-4" />
+              </button>
+            )}
+            {project.demoUrl && (
+              <button
+                onClick={(e) => openExternal(e, project.demoUrl)}
+                aria-label="Live demo"
+                className="rounded-md p-2 text-gray-500 transition-colors hover:bg-white/5 hover:text-white"
+              >
+                <ExternalLink className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export default function Projects({ showAll = false }) {
   const [displayedProjects, setDisplayedProjects] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const projectsPerLoad = 3; // Show 3 projects initially
+  const projectsPerLoad = 3;
 
-  // Load initial projects
   useEffect(() => {
     if (showAll) {
-      // when showing all, load everything immediately
       setDisplayedProjects(projects);
       setCurrentIndex(projects.length);
       return;
     }
-
-    // otherwise load only the initial slice
     const initial = projects.slice(0, projectsPerLoad);
     setDisplayedProjects(initial);
     setCurrentIndex(initial.length);
@@ -30,197 +146,65 @@ export default function Projects({ showAll = false }) {
   const loadMoreProjects = () => {
     if (isLoading || currentIndex >= projects.length) return;
     setIsLoading(true);
-
-    // Simulate loading delay for better UX
     setTimeout(() => {
       const nextProjects = projects.slice(currentIndex, currentIndex + projectsPerLoad);
-      setDisplayedProjects(prev => [...prev, ...nextProjects]);
-      setCurrentIndex(prev => prev + nextProjects.length);
+      setDisplayedProjects((prev) => [...prev, ...nextProjects]);
+      setCurrentIndex((prev) => prev + nextProjects.length);
       setIsLoading(false);
     }, 500);
   };
 
-  // Infinite scroll handler - only when showAll is true
   useEffect(() => {
     if (!showAll) return;
-
     const handleScroll = () => {
       const nearBottom = window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 250;
-      if (nearBottom && !isLoading) {
-        loadMoreProjects();
-      }
+      if (nearBottom && !isLoading) loadMoreProjects();
     };
-
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [currentIndex, isLoading, showAll]);
 
-  function ImageWithFallback({ id, alt, image }) {
-    const initial = image ? `/${image}` : `/${id}.png`;
-    const [src, setSrc] = useState(initial);
-
-    const handleError = () => {
-  if (src.endsWith('.png')) setSrc(image ? `/${id}.png` : `/${id}.svg`);
-  else if (src.endsWith('.svg')) setSrc('/portfolio.png');
-      else setSrc('/portfolio.png');
-    };
-
-    return (
-      <img
-        src={src}
-        alt={alt}
-        onError={handleError}
-        className="absolute inset-0 w-full h-full object-contain p-4 drop-shadow-2xl transition-transform duration-300 group-hover:scale-[1.03]"
-      />
-    );
-  }
-
   return (
-    <section id="projects" className="min-h-screen bg-black text-white py-20 px-6">
+    <section id="projects" className="min-h-screen bg-black px-6 py-20 text-white">
       <div className="container mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
-          <p className="text-sm font-light text-gray-400 mb-4 uppercase tracking-wider">PORTFOLIO</p>
-          <h1 className="text-4xl md:text-5xl font-light leading-tight mb-6">
-            Discover what I've created
+        <div className="mb-16 text-center">
+          <p className="mb-4 text-sm font-light uppercase tracking-wider text-gray-400">PORTFOLIO</p>
+          <h1 className="mb-6 text-4xl font-light leading-tight md:text-5xl">
+            Discover what I&apos;ve created
           </h1>
-          <p className="text-gray-300 text-lg leading-relaxed max-w-2xl mx-auto">
-            Each piece reflects my passion for innovation and commitment to delivering 
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-300">
+            Each piece reflects my passion for innovation and commitment to delivering
             high-quality results. Feel free to explore and get inspired!
           </p>
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {displayedProjects.map((project, idx) => (
-            <Link
-              key={`${project.id}-${idx}`}
-              href={`/projects/${project.id}`}
-              className="group bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-gray-600 transition-all duration-300 cursor-pointer"
-            >
-              {/* Project Image */}
-              <div className="relative h-48 bg-gray-800 overflow-hidden">
-                {/* Sunburst Pattern Background */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-full h-full relative">
-                    {/* Sunburst rays */}
-                    {Array.from({ length: 16 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="absolute top-1/2 left-1/2 origin-bottom bg-gradient-to-t from-gray-600 to-gray-400 opacity-60"
-                        style={{
-                          width: '2px',
-                          height: '120px',
-                          transform: `translate(-50%, -100%) rotate(${i * 22.5}deg)`,
-                        }}
-                      />
-                    ))}
-                    {/* Center circle */}
-                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gray-500 rounded-full opacity-80" />
-                  </div>
-                </div>
-                {/* project image */}
-                <ImageWithFallback id={project.id} alt={project.title} image={project.image} />
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
-                  {project.demoUrl && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="bg-white text-black hover:bg-gray-200"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.open(project.demoUrl, '_blank');
-                      }}
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Demo
-                    </Button>
-                  )}
-                  {project.codeUrl && (
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="bg-white text-black hover:bg-gray-200"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.open(project.codeUrl, '_blank');
-                      }}
-                    >
-                      <Github className="w-4 h-4 mr-2" />
-                      Code
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              {/* Project Content */}
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xl font-medium text-white">
-                    {project.title}
-                  </h3>
-                  <div className="flex gap-2 shrink-0">
-                    {project.status && (
-                      <span className="px-2 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs rounded-full whitespace-nowrap">
-                        {project.status}
-                      </span>
-                    )}
-                    {project.featured && (
-                      <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <p className="text-gray-300 text-sm leading-relaxed mb-4">
-                  {project.shortDescription || project.description}
-                </p>
-                
-                {/* Technologies */}
-                <div className="flex flex-wrap gap-2">
-                  {project.technologies.map((tech, index) => (
-                    <span
-                      key={index}
-                      className="px-3 py-1 bg-gray-800 text-gray-300 text-xs rounded-full border border-gray-700"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </Link>
+            <ProjectCard key={`${project.id}-${idx}`} project={project} index={idx} />
           ))}
         </div>
 
         {/* Loading indicator */}
         {isLoading && (
-          <div className="text-center mb-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-            <p className="text-gray-400 mt-2">Loading more projects...</p>
+          <div className="mb-8 text-center">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-amber-300" />
+            <p className="mt-2 font-mono text-xs uppercase tracking-[0.2em] text-gray-500">Loading</p>
           </div>
         )}
 
-  {/* Infinite scroll loads remaining projects automatically; kept "View All Projects" button below */}
-
-        {/* View All Projects Button */}
+        {/* View All Projects */}
         <div className="text-center">
-          <Button
-            asChild
-            variant="secondary"
-            className="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-md"
+          <Link
+            href="/all-projects"
+            className="group inline-flex items-center gap-2 rounded-md border border-white/15 px-6 py-3 text-sm text-gray-200 transition-colors hover:border-white/40 hover:text-white"
           >
-            <a href="/all-projects">View All Projects</a>
-          </Button>
+            View all projects
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
         </div>
       </div>
-
-      {/* Additional geometric elements for visual interest */}
-      <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-white opacity-30 rounded-full"></div>
-      <div className="absolute bottom-1/3 right-1/3 w-1 h-1 bg-white opacity-50 rounded-full"></div>
     </section>
-  )
+  );
 }
