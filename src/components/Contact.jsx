@@ -52,10 +52,10 @@ export default function Contact() {
                 <div>
                   <p className="text-white font-medium mb-1">Write an email</p>
                   <a 
-                    href="mailto:romanchacks@gmail.com" 
+                    href="mailto:romanchroshansingh@gmail.com" 
                     className="text-gray-300 hover:text-white transition-colors underline"
                   >
-                    romanchacks@gmail.com
+                    romanchroshansingh@gmail.com
                   </a>
                 </div>
               </div>

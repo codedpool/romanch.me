@@ -1,5 +1,27 @@
 [
   {
+    "id": "behooked-ai-intern",
+    "role": "AI Intern",
+    "company": "Behooked",
+    "type": "Internship · AI Systems",
+    "location": "Remote",
+    "liveUrl": null,
+    "links": [
+      { "label": "Ad Studio", "url": "https://behooked.co/apps/adgen" },
+      { "label": "HouseTour", "url": "https://behooked.co/apps/housetour" },
+      { "label": "Transitions", "url": "https://behooked.co/apps/transitions" },
+      { "label": "SmartShot", "url": "https://behooked.co/apps/smartshot" }
+    ],
+    "startDate": "April 2026",
+    "endDate": "Present",
+    "current": true,
+    "bullets": [
+      "Shipped Ad Studio (site scrape → brand kit → ad templates) and a transitions app with 24+ templates.",
+      "Built Behooked Assist, a multi-modal AI layer routing prompts across user-selected image and video inference models.",
+      "Engineered the HouseTour video pipeline bypassing Seedance's 15s generation cap: split the script into two chunks, fed the last frame + context into a second inference call, and merged both clips into a seamless 30s output."
+    ]
+  },
+  {
     "id": "mlh-coach",
     "role": "Coach",
     "company": "Major League Hacking (MLH)",
@@ -24,11 +46,8 @@
     "endDate": "July 2025",
     "current": false,
     "bullets": [
-      "Engineered backend API routes in Next.js for authentication, CMS operations, and data workflows, supporting 40–50 active users during the initial rollout.",
-      "Implemented secure role-based access control (RBAC) with 3 user roles, protected routes, and session handling for 50+ users.",
-      "Designed database schemas and optimized CRUD operations to enhance API reliability and reduce latency.",
-      "Built the TeamWorks WebApp front-end in Next.js from Figma designs with a 1.5s LCP.",
-      "Integrated front-end components with backend services with a 5-member team."
+      "Engineered Next.js API routes for auth, CMS, and data workflows; implemented RBAC with 3 permission tiers, protected middleware, and session handling across 50+ users.",
+      "Delivered the TeamWorks front-end from Figma in Next.js with a 1.5s LCP; built responsive components with Tailwind CSS integrated end-to-end with backend services."
     ]
   }
 ]

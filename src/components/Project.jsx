@@ -70,7 +70,7 @@ export default function Projects({ showAll = false }) {
         src={src}
         alt={alt}
         onError={handleError}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-contain p-4 drop-shadow-2xl transition-transform duration-300 group-hover:scale-[1.03]"
       />
     );
   }
@@ -124,32 +124,36 @@ export default function Projects({ showAll = false }) {
 
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-4">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="bg-white text-black hover:bg-gray-200"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      window.open(project.demoUrl, '_blank');
-                    }}
-                  >
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Demo
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="bg-white text-black hover:bg-gray-200"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      window.open(project.codeUrl, '_blank');
-                    }}
-                  >
-                    <Github className="w-4 h-4 mr-2" />
-                    Code
-                  </Button>
+                  {project.demoUrl && (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="bg-white text-black hover:bg-gray-200"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(project.demoUrl, '_blank');
+                      }}
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Demo
+                    </Button>
+                  )}
+                  {project.codeUrl && (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="bg-white text-black hover:bg-gray-200"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(project.codeUrl, '_blank');
+                      }}
+                    >
+                      <Github className="w-4 h-4 mr-2" />
+                      Code
+                    </Button>
+                  )}
                 </div>
               </div>
 
@@ -159,11 +163,18 @@ export default function Projects({ showAll = false }) {
                   <h3 className="text-xl font-medium text-white">
                     {project.title}
                   </h3>
-                  {project.featured && (
-                    <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
-                      Featured
-                    </span>
-                  )}
+                  <div className="flex gap-2 shrink-0">
+                    {project.status && (
+                      <span className="px-2 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs rounded-full whitespace-nowrap">
+                        {project.status}
+                      </span>
+                    )}
+                    {project.featured && (
+                      <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
+                        Featured
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <p className="text-gray-300 text-sm leading-relaxed mb-4">
                   {project.shortDescription || project.description}

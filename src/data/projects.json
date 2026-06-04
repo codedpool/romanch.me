@@ -1,13 +1,118 @@
 [
   {
+    "id": "bulbul",
+    "title": "Bulbul",
+    "image": "bulbul.png",
+    "status": "Releasing Soon",
+    "aiNote": "This app was built with heavy AI-assisted coding. That said, great care has been taken in the quality and delivery of the final product.",
+    "description": "Bulbul is a tray-resident push-to-talk voice dictation app for Windows, built end-to-end as a v1.0.0 public release. Hold the hotkey, speak, release — Groq Whisper transcribes, an app-aware LLM cleans the text up based on which app you're dictating into, and the polished result is pasted at the cursor. The core engineering challenge wasn't transcription — Whisper handles that — it was making the desktop wrapper invisible: 2.7 MB resident memory (~100x lighter than Electron-based competitors like Wispr Flow), instant hotkey response, and zero idle CPU.",
+    "shortDescription": "Push-to-talk voice dictation for Windows at 2.7 MB resident — ~100x lighter than Wispr Flow. Hold a key, speak, release; polished text lands in any app.",
+    "codeUrl": "https://github.com/codedpool/bulbul",
+    "technologies": [
+      "Rust",
+      "Tauri 2",
+      "React",
+      "Groq Whisper",
+      "Win32"
+    ],
+    "category": "Developer Tools",
+    "featured": true,
+    "features": [
+      "Tiny Footprint: Runs at 2.7 MB resident memory — ~100x lighter than Electron-based competitors like Wispr Flow — by using WebView2 instead of bundling Chromium, deferring window rendering until the dashboard is opened, and keeping a single-process Rust backend.",
+      "Zero-Idle Audio Pipeline: Global push-to-talk hotkey → 16 kHz mono PCM capture via cpal (Whisper's smallest accepted payload) → streamed directly to Groq with no disk writes → LLM cleanup → clipboard paste. The mic only opens while the key is held, so CPU and memory stay flat between dictations.",
+      "App-Aware LLM Cleanup: Detects the foreground process via Win32 GetForegroundWindow + QueryFullProcessImageNameW, maps it to one of 35+ categorized apps with an O(1) HashMap lookup, and swaps the system prompt per category so tone matches the venue (chat for Slack, formal for Outlook, bullets for docs).",
+      "Correction-Memory System (V3.1): User-defined fixes are applied as direct pre-cleanup string substitutions instead of LLM few-shot examples — sidestepping the 8B model's tendency to echo example fixes, eliminating per-dictation token cost, and cutting cleanup latency.",
+      "Signed Mode-B Auto-Update: minisign-verified releases via GitHub Actions (tauri-action), background download on a 6-hour cadence with the Update handle stashed in memory for sub-second install-on-quit, plus a non-blocking in-app update banner.",
+      "Privacy-First Telemetry: Opt-out, append-only event log buffered in memory and flushed on size (10 events) or a 30s timer to Supabase PostgREST under INSERT-only Row-Level Security — durable anon UUID, zero PII, no IP retention, and never blocks a user-facing action.",
+      "Tray-First Lifecycle: tauri-plugin-autostart (start with Windows by default), hidden-window startup, and a tray-driven Quit that installs pending updates on exit — cold-start RAM stays under 3 MB until the dashboard is opened.",
+      "Release Engineering: Code-signed NSIS installer, GitHub Actions release workflow, structured issue/discussion templates, README/CHANGELOG/CONTRIBUTING/SmartScreen FAQ, and an MIT-licensed public repo."
+    ],
+    "techStack": {
+      "frontend": [
+        "React",
+        "Vite",
+        "WebView2"
+      ],
+      "backend": [
+        "Rust",
+        "Tauri 2",
+        "cpal (audio)",
+        "Win32 APIs",
+        "SQLite (rusqlite)"
+      ],
+      "aiIntegration": [
+        "Groq Whisper",
+        "Groq Llama (8B cleanup)"
+      ],
+      "telemetry": [
+        "Supabase (PostgREST + RLS)"
+      ],
+      "releaseAndSecurity": [
+        "GitHub Actions (tauri-action)",
+        "minisign",
+        "NSIS installer",
+        "Code signing"
+      ]
+    }
+  },
+  {
+    "id": "silkhr",
+    "title": "SilkHR",
+    "image": "silkhr.png",
+    "highlight": "1st Prize — Rumik × AWS Voice AI Hackathon 2026. Built in under 6 hours during the live event, against the rest of the cohort.",
+    "description": "SilkHR is a two-sided AI voice interview platform built to fix three problems with existing tools: they sound robotic, they can't handle the English-Hindi code-switching most Indian engineers actually speak, and they aren't available to candidates for practice. Recruiters build interview templates, bulk-assign candidates by email, review scored transcripts, and explicitly release results (held by default); candidates take scheduled screens in-browser or run unlimited ad-hoc mock interviews tailored to any role. The centerpiece is a streaming voice pipeline — Deepgram Nova-3 STT → Gemini Flash → Silk muga TTS — that drove per-turn latency from 11–17s down to ~2.4s by streaming on both ends and keeping clients warm across HMR.",
+    "shortDescription": "Two-sided AI voice interviewer with native Hinglish, real follow-ups, and a streaming Deepgram → Gemini → Silk muga pipeline at ~2.4s per turn. 1st prize, Rumik × AWS Voice AI Hackathon.",
+    "codeUrl": "https://github.com/codedpool/silkhr",
+    "technologies": [
+      "Next.js 16",
+      "React 19",
+      "MongoDB",
+      "Deepgram",
+      "Gemini"
+    ],
+    "category": "AI Voice",
+    "featured": true,
+    "features": [
+      "Two-Sided Platform: Recruiters build interview templates, bulk-assign candidates by email, review scored transcripts, and explicitly release results (held by default); candidates take scheduled interviews in-browser or run unlimited ad-hoc mock interviews tailored to any role.",
+      "Native Hinglish, No Toggle: Deepgram Nova-3 STT runs with language 'multi' so the interviewer handles the English-Hindi code-switching Indian engineers actually speak — no language switch required.",
+      "Recruiter-Grade Brain: Gemini Flash prompted to behave like an Indian recruiter — short conversational lines, adaptive deep follow-ups, and a pressure mode.",
+      "Emotion TTS: Silk muga streams PCM at 24kHz with first audio under a second, played gaplessly through a single shared AudioContext that schedules incoming chunks back-to-back.",
+      "Streaming Voice Pipeline: Cut per-turn latency from 11–17s (REST-only v1) to ~2.4s by streaming STT live, minting Silk WS tokens server-side, opening the TTS WebSocket from the browser, and keeping Mongo + model clients warm across HMR.",
+      "Release-Gated Results Flow: Templates → bulk assignments → sessions → recruiter-released feedback, secured with httpOnly-cookie auth."
+    ],
+    "techStack": {
+      "frontend": [
+        "Next.js 16 (App Router, Turbopack)",
+        "React 19",
+        "Tailwind 4"
+      ],
+      "voiceAI": [
+        "Deepgram Nova-3 (STT)",
+        "Gemini Flash (LLM)",
+        "Silk muga (24kHz emotion TTS)"
+      ],
+      "backend": [
+        "MongoDB Atlas (mongodb+srv://)",
+        "httpOnly-cookie auth",
+        "WebSocket streaming"
+      ]
+    }
+  },
+  {
     "id": "wealthpulse",
-  "title": "WealthPulse",
-  "image": "wealthpulse.png",
-  "description": "A comprehensive investment management platform designed to help users track, analyze, and optimize their investments in mutual funds, cryptocurrencies, and other financial instruments. Built during HackCBS8.0 with AI-driven insights and real-time data.",
-  "shortDescription": "AI-powered investment management platform for tracking mutual funds and crypto with real-time insights.",
-  "demoUrl": "https://wealthpulse-nu.vercel.app/",
+    "title": "WealthPulse",
+    "image": "wealthpulse.png",
+    "description": "A comprehensive investment management platform designed to help users track, analyze, and optimize their investments in mutual funds, cryptocurrencies, and other financial instruments. Built during HackCBS8.0 with AI-driven insights and real-time data.",
+    "shortDescription": "AI-powered investment management platform for tracking mutual funds and crypto with real-time insights.",
+    "demoUrl": "https://wealthpulse-nu.vercel.app/",
     "codeUrl": "https://github.com/codedpool/wealthpulse",
-    "technologies": ["React", "FastAPI", "MongoDB", "AI/ML", "TailwindCSS"],
+    "technologies": [
+      "React",
+      "FastAPI",
+      "MongoDB",
+      "AI/ML",
+      "TailwindCSS"
+    ],
     "category": "FinTech",
     "featured": true,
     "features": [
@@ -19,10 +124,186 @@
       "Authentication: Secure login and user management via Auth0."
     ],
     "techStack": {
-      "frontend": ["React", "Vite", "TailwindCSS", "Framer Motion", "Recharts", "Plotly.js"],
-      "backend": ["FastAPI", "MongoDB", "Python (mftool, pandas, numpy)"],
-      "aiIntegration": ["Groq API (Llama 3.3-70b)"],
-      "authentication": ["Auth0"]
+      "frontend": [
+        "React",
+        "Vite",
+        "TailwindCSS",
+        "Framer Motion",
+        "Recharts",
+        "Plotly.js"
+      ],
+      "backend": [
+        "FastAPI",
+        "MongoDB",
+        "Python (mftool, pandas, numpy)"
+      ],
+      "aiIntegration": [
+        "Groq API (Llama 3.3-70b)"
+      ],
+      "authentication": [
+        "Auth0"
+      ]
+    }
+  },
+  {
+    "id": "spktr",
+    "title": "Spktr",
+    "image": "spktr.png",
+    "status": "Releasing Soon",
+    "description": "Spktr is a desktop AI assistant that watches your screen, answers questions about what's currently visible, and proactively alerts you when it detects notable issues like errors, failed builds, or warning prompts. It's built as a Tauri 2 desktop app with a Next.js overlay UI, a Node/Express backend, and a Rust host that manages the native window, system tray, global shortcut, and sidecar lifecycle. It captures the screen periodically, skips unchanged frames with perceptual-hash diffing, streams answers token-by-token, and layers in long-term vector memory plus per-session context so the assistant gets sharper the more you use it.",
+    "shortDescription": "Desktop AI assistant (Tauri 2 + Rust) that watches your screen, answers questions about what's visible, and proactively flags errors and failed builds — with sqlite-vec long-term memory and per-session context.",
+    "codeUrl": "https://github.com/codedpool/spktr",
+    "technologies": [
+      "Tauri 2",
+      "Rust",
+      "Next.js",
+      "Node.js",
+      "SQLite"
+    ],
+    "category": "Developer Tools",
+    "featured": true,
+    "features": [
+      "Screen-Aware Q&A: Captures the screen every ~7s, skips unchanged frames via sharp-based perceptual-hash diffing, and answers questions about what's currently visible — streamed token-by-token to the overlay over SSE.",
+      "Proactive Engine: On meaningful screen changes (>5% pHash diff, 90s cooldown), a meta-model returns a structured { shouldIntervene, suggestion } decision and surfaces a dock toast that prefills the chat input — toggleable in Settings.",
+      "Long-Term Vector Memory: Extracts 1–3 reusable facts from every Q&A, embeds them at 768 dimensions, and retrieves the top-5 relevant memories via sqlite-vec native KNN (with automatic JS cosine fallback) to inject into every prompt.",
+      "Session Context: Tracks interactions per session (15-minute inactivity timeout), compresses them to an AI summary every 20 interactions, and injects current-session context at the top of each prompt.",
+      "Four-Layer Prompt Assembly: Each prompt is built from session context → recent history (last 5 Q&A in 30 min) → top-5 long-term memories → current screenshot.",
+      "Pluggable Providers: An OpenAI-compatible client layer supporting Ollama and LM Studio (local) or Groq (cloud), with guided onboarding, connectivity tests, and hot-reload on config change.",
+      "Native Desktop Host: A Rust/Tauri 2 host manages the floating overlay (Ctrl+Shift+Space), system tray, and global shortcut, and launches the backend as a bundled sidecar that's killed when the app exits."
+    ],
+    "prerequisites": [
+      "Node.js 18+ (Node 20 recommended)",
+      "Rust toolchain (stable)",
+      "Tauri CLI v2 (cargo install tauri-cli --version \"^2\")",
+      "A model provider: Ollama, LM Studio, or Groq"
+    ],
+    "techStack": {
+      "desktop": [
+        "Tauri v2 (Rust)"
+      ],
+      "frontend": [
+        "Next.js (App Router)",
+        "React"
+      ],
+      "backend": [
+        "Node.js",
+        "Express",
+        "WebSocket",
+        "SSE streaming"
+      ],
+      "aiProviders": [
+        "Ollama",
+        "LM Studio",
+        "Groq",
+        "OpenAI-compatible clients"
+      ],
+      "storageAndSearch": [
+        "SQLite (better-sqlite3)",
+        "sqlite-vec (768-dim KNN)",
+        "sharp pHash diffing"
+      ]
+    }
+  },
+  {
+    "id": "ride-pooling-backend",
+    "title": "Smart Airport Ride-Pooling Backend",
+    "image": "ride-pooling.png",
+    "description": "A production-ready backend API for airport ride pooling that intelligently matches passengers into shared rides while guaranteeing zero double-bookings under high concurrency. It uses an O(n) PostGIS geospatial matching algorithm with composite scoring to minimize detours (under 30%), PostgreSQL pessimistic and optimistic locking for ACID-safe seat allocation, and multi-layer caching plus connection pooling to scale to 10,000+ concurrent users — load-tested at 562 req/s with 88ms average latency and a 0% error rate.",
+    "shortDescription": "Production-ready Node.js + PostGIS API that pools airport rides with zero double-bookings, scaling to 10,000+ concurrent users at 562 req/s.",
+    "codeUrl": "https://github.com/codedpool/ride-pooling-backend",
+    "technologies": [
+      "Node.js",
+      "PostgreSQL",
+      "PostGIS",
+      "Docker",
+      "Express.js"
+    ],
+    "category": "Backend",
+    "featured": true,
+    "features": [
+      "Smart Matching Algorithm: Linear O(n) scan with early termination cuts candidates by 88%, scored on a composite of detour (50%), distance (30%), and capacity (20%) to keep shared-ride detours under 30%.",
+      "Zero Double-Bookings: Pessimistic locking via SELECT FOR UPDATE plus optimistic version-field locking inside ACID transactions eliminates race conditions under concurrent load.",
+      "High Concurrency: Scales to 10,000+ concurrent users — load-tested at 562 req/s with 88ms average latency, 209ms P99, and a 0% error rate.",
+      "Performance Optimization: Multi-layer caching (70% query reduction), connection pooling (7x speedup), and B-Tree/composite indexing (10–100x faster queries).",
+      "Geospatial Matching: PostGIS-powered geographic queries with a 10km search radius and GIST spatial indexing on cab locations.",
+      "Dynamic Pricing: Distance-based fare (₹50 base + ₹10/km) with pooling discounts for shared rides and a Redis-ready surge-pricing framework.",
+      "Production-Ready Infrastructure: Dockerized with Docker Compose, an autocannon load-testing suite, schema migration and seed scripts, and a Postman API collection."
+    ],
+    "prerequisites": [
+      "Docker & Docker Compose",
+      "Node.js 22.x",
+      "npm",
+      "PostgreSQL 15.3 (or run via Docker)"
+    ],
+    "techStack": {
+      "backend": [
+        "Node.js 22.x",
+        "Express.js 4.19",
+        "JavaScript (ES6+)"
+      ],
+      "database": [
+        "PostgreSQL 15.3",
+        "PostGIS 3.3",
+        "pg + pg-pool (max 50 connections)"
+      ],
+      "caching": [
+        "In-Memory (Map)",
+        "Redis (planned)"
+      ],
+      "devOps": [
+        "Docker",
+        "Docker Compose",
+        "autocannon (load testing)",
+        "Git"
+      ]
+    }
+  },
+  {
+    "id": "jobboard-ai",
+    "title": "JobBoard AI",
+    "image": "jobboardai.png",
+    "description": "A conversational, AI-driven job aggregator that turns \"find me remote Python internships\" into a ranked shortlist of real openings. Instead of filling out search forms across a dozen job sites, users just chat — an LLM parses the request into structured intent, the backend fans out concurrent fetchers across 6+ job boards, cross-source duplicates are collapsed, and every result is scored by an LLM against the user's actual preferences, surfacing the best matches with per-dimension reasoning.",
+    "shortDescription": "Conversational AI job search — describe what you want in plain English and an LLM pipeline fetches across 6+ boards, then deduplicates, scores, and ranks the best matches.",
+    "codeUrl": "https://github.com/codedpool/jobboard-ai",
+    "technologies": [
+      "Next.js 16",
+      "FastAPI",
+      "PostgreSQL",
+      "Groq LLM",
+      "React 19"
+    ],
+    "category": "AI Job Search",
+    "featured": true,
+    "features": [
+      "Natural-Language Search: An LLM (Llama 3.3 70B via Groq) parses free-form queries into structured intent — role, tech stack, seniority, and location — so users find jobs by chatting instead of filling out forms.",
+      "Parallel Multi-Source Ingestion: Concurrent async fetchers fan out across 6+ job boards (LinkedIn, Indeed, Google, Glassdoor via JobSpy, RemoteOK, Hacker News), each isolated to its own DB session to eliminate SQLAlchemy concurrency races, with wall-clock timeouts so one slow source never blocks the request.",
+      "Cross-Source Deduplication: SHA-256 fingerprinting with title/company normalization and canonical job-board ID extraction collapses the same role posted on multiple boards into a single card, keeping the richest copy.",
+      "Cost-Efficient LLM Scoring: Batch-of-5 scoring with a concurrency semaphore, exponential-backoff retry on rate limits (429), and single-job fallback — cutting token cost ~5x while scoring skills, seniority, and location (0–100 each) with a one-sentence rationale.",
+      "Freshness-Aware Ranking: Re-ranks by an effective score that blends the raw LLM match score with an exponential time-decay curve, plus a deterministic pre-LLM seniority title filter so an intern query never wastes budget scoring \"Principal Engineer\" roles.",
+      "Resilient Streaming Chat: Fresh Clerk JWTs minted per backend call survive 30s+ pipeline runs, with optimistic UI updates and abortable streams.",
+      "Monetization & Admin: Per-user search quotas across free / trial / unlimited plan tiers, plus an admin console for user management, access restriction, and plan grants — integrated with the Clerk user API."
+    ],
+    "techStack": {
+      "frontend": [
+        "Next.js 16",
+        "React 19",
+        "Tailwind CSS v4",
+        "shadcn/ui + Radix UI",
+        "Vercel AI SDK",
+        "Zustand",
+        "Clerk"
+      ],
+      "backend": [
+        "FastAPI (async)",
+        "SQLAlchemy 2.0 + asyncpg",
+        "PostgreSQL",
+        "Pydantic v2",
+        "Alembic"
+      ],
+      "aiAndData": [
+        "Groq (Llama 3.3 70B)",
+        "JobSpy + custom scrapers"
+      ]
     }
   },
   {
@@ -30,28 +311,53 @@
     "title": "FundHive",
     "description": "A social media-inspired crowdfunding and investment platform where entrepreneurs pitch startup ideas, verified by Aadhaar/PAN, and connect with investors or crowdfunders for equity or rewards.",
     "shortDescription": "Social crowdfunding platform connecting entrepreneurs with investors through verified pitches.",
-  "demoUrl": "https://fundhive.vercel.app/",
+    "demoUrl": "https://fundhive.vercel.app/",
     "codeUrl": "https://github.com/codedpool/fundhive",
-    "technologies": ["React", "Node.js", "MongoDB","AI", "AWS S3", "Auth0"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "AI",
+      "AWS S3",
+      "Auth0"
+    ],
     "category": "FinTech",
     "featured": true,
     "features": [
-  "AI Insights: Groq-powered business viability score and analysis report.",
-  "Project Creation: Multi-step form to post startup ideas with details and media uploads.",
-  "Identity Verification: Aadhaar upload and PAN card input for creators.",
-  "Funding Options: Reward-based crowdfunding and equity investments with escrow system.",
-  "Negotiation: Custom amount/equity proposals with creator approval.",
-  "Social Engagement: Like, comment, and share projects in a dynamic feed.",
-  "Profile Management: Track investments, created projects, and negotiations.",
-  "Search & Filters: Browse projects by category, keyword, or trending status.",
-  "Notifications: Alerts for milestones and funding goal achievements.",
-  "Security: Auth0 authentication, AWS S3 for media uploads, and blockchain-simulated escrow."
+      "AI Insights: Groq-powered business viability score and analysis report.",
+      "Project Creation: Multi-step form to post startup ideas with details and media uploads.",
+      "Identity Verification: Aadhaar upload and PAN card input for creators.",
+      "Funding Options: Reward-based crowdfunding and equity investments with escrow system.",
+      "Negotiation: Custom amount/equity proposals with creator approval.",
+      "Social Engagement: Like, comment, and share projects in a dynamic feed.",
+      "Profile Management: Track investments, created projects, and negotiations.",
+      "Search & Filters: Browse projects by category, keyword, or trending status.",
+      "Notifications: Alerts for milestones and funding goal achievements.",
+      "Security: Auth0 authentication, AWS S3 for media uploads, and blockchain-simulated escrow."
     ],
     "techStack": {
-      "frontend": ["React.js", "Vite", "TailwindCSS", "Auth0", "Lucide React"],
-      "backend": ["Node.js", "Express.js", "MongoDB with Mongoose", "AWS S3", "Groq SDK", "Multer"],
-      "deployment": ["Vercel"],
-      "other": ["REST API", "SHA-256 blockchain simulation"]
+      "frontend": [
+        "React.js",
+        "Vite",
+        "TailwindCSS",
+        "Auth0",
+        "Lucide React"
+      ],
+      "backend": [
+        "Node.js",
+        "Express.js",
+        "MongoDB with Mongoose",
+        "AWS S3",
+        "Groq SDK",
+        "Multer"
+      ],
+      "deployment": [
+        "Vercel"
+      ],
+      "other": [
+        "REST API",
+        "SHA-256 blockchain simulation"
+      ]
     }
   },
   {
@@ -59,9 +365,15 @@
     "title": "Codev",
     "description": "A collaborative code editor with AI-powered assistance, real-time collaboration, file management, and multi-language execution support.",
     "shortDescription": "Real-time collaborative code editor with AI assistance and multi-language execution.",
-  "demoUrl": "https://codev-k6mg.onrender.com/",
+    "demoUrl": "https://codev-k6mg.onrender.com/",
     "codeUrl": "https://github.com/codedpool/codev",
-    "technologies": ["React", "Node.js", "Socket.IO","AI", "MongoDB"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "Socket.IO",
+      "AI",
+      "MongoDB"
+    ],
     "category": "Developer Tools",
     "featured": false,
     "features": [
@@ -74,20 +386,42 @@
       "Authentication: Secure login with Auth0."
     ],
     "techStack": {
-      "frontend": ["React.js", "Vite", "Material-UI", "CodeMirror", "Auth0"],
-      "backend": ["Node.js", "Express.js", "MongoDB with Mongoose", "AWS SDK", "JDoodle API", "Groq SDK", "Socket.IO"],
-      "other": ["Auth0 authentication", "Axios for API calls"]
+      "frontend": [
+        "React.js",
+        "Vite",
+        "Material-UI",
+        "CodeMirror",
+        "Auth0"
+      ],
+      "backend": [
+        "Node.js",
+        "Express.js",
+        "MongoDB with Mongoose",
+        "AWS SDK",
+        "JDoodle API",
+        "Groq SDK",
+        "Socket.IO"
+      ],
+      "other": [
+        "Auth0 authentication",
+        "Axios for API calls"
+      ]
     }
   },
   {
     "id": "mass-mail-sender",
     "title": "Mass Mail Sender",
-  "image": "mailer.png",
+    "image": "mailer.png",
     "description": "A web application for sending personalized bulk emails with scheduling, tracking, and GDPR compliance features.",
     "shortDescription": "GDPR-compliant bulk email platform with personalization and tracking capabilities.",
-  "demoUrl": "https://mailer1-d1qw.onrender.com/",
+    "demoUrl": "https://mailer1-d1qw.onrender.com/",
     "codeUrl": "https://github.com/codedpool/mailer",
-    "technologies": ["React", "Node.js", "MongoDB", "Nodemailer"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "Nodemailer"
+    ],
     "category": "Marketing Tools",
     "featured": false,
     "features": [
@@ -101,29 +435,50 @@
       "User Campaigns: Users manage only their campaigns."
     ],
     "techStack": {
-      "frontend": ["React", "Vite", "Auth0"],
-      "backend": ["Node.js", "Express.js", "MongoDB", "Nodemailer", "Agenda"],
-      "other": ["Multer (file uploads)", "CSV Parser", "Dotenv"]
+      "frontend": [
+        "React",
+        "Vite",
+        "Auth0"
+      ],
+      "backend": [
+        "Node.js",
+        "Express.js",
+        "MongoDB",
+        "Nodemailer",
+        "Agenda"
+      ],
+      "other": [
+        "Multer (file uploads)",
+        "CSV Parser",
+        "Dotenv"
+      ]
     }
-  }
-  ,
+  },
   {
     "id": "authentitest",
     "title": "AuthentiTest",
     "description": "AuthentiTest is a comprehensive online examination platform designed to ensure academic integrity through advanced face detection and plagiarism checks. The application leverages AWS Rekognition for real-time face verification, Groq API for AI-generated content and plagiarism analysis, and integrates seamlessly with MongoDB for data persistence.",
     "shortDescription": "Online exam platform with real-time face verification and AI/plagiarism detection.",
-  "demoUrl": "https://authentitest.onrender.com/",
+    "demoUrl": "https://authentitest.onrender.com/",
     "codeUrl": "https://github.com/codedpool/authentitest",
-    "technologies": ["React", "Node.js", "MongoDB","AI", "AWS Rekognition", "Groq API", "Socket.IO"],
+    "technologies": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "AI",
+      "AWS Rekognition",
+      "Groq API",
+      "Socket.IO"
+    ],
     "category": "EdTech",
     "featured": false,
     "features": [
-  "Plagiarism & AI Detection: Analyze submitted answers to detect AI-generated content and plagiarism using Groq API.",
-  "User Authentication: Secure registration and login for both teachers and students.",
-  "Real-Time Face Detection: Continuous face scanning during exams to prevent impersonation using AWS Rekognition.",
-  "Dynamic Test Management: Teachers can create, assign, and manage tests; students can view assigned tests and submit answers.",
-  "Responsive UI: Built with React and Tailwind CSS for an intuitive user experience.",
-  "Socket.IO Integration: Real-time alerts and notifications for enhanced interactivity."
+      "Plagiarism & AI Detection: Analyze submitted answers to detect AI-generated content and plagiarism using Groq API.",
+      "User Authentication: Secure registration and login for both teachers and students.",
+      "Real-Time Face Detection: Continuous face scanning during exams to prevent impersonation using AWS Rekognition.",
+      "Dynamic Test Management: Teachers can create, assign, and manage tests; students can view assigned tests and submit answers.",
+      "Responsive UI: Built with React and Tailwind CSS for an intuitive user experience.",
+      "Socket.IO Integration: Real-time alerts and notifications for enhanced interactivity."
     ],
     "prerequisites": [
       "Node.js (v18 or higher)",
@@ -133,47 +488,144 @@
       "Groq API key"
     ],
     "techStack": {
-      "frontend": ["React", "TailwindCSS"],
-      "backend": ["Node.js", "Express.js", "Socket.IO", "MongoDB"],
-      "aiIntegration": ["Groq API"],
-      "vision": ["AWS Rekognition"],
-      "authentication": ["JWT", "Auth0 (optional)"]
+      "frontend": [
+        "React",
+        "TailwindCSS"
+      ],
+      "backend": [
+        "Node.js",
+        "Express.js",
+        "Socket.IO",
+        "MongoDB"
+      ],
+      "aiIntegration": [
+        "Groq API"
+      ],
+      "vision": [
+        "AWS Rekognition"
+      ],
+      "authentication": [
+        "JWT",
+        "Auth0 (optional)"
+      ]
+    }
+  },
+  {
+    "id": "trendora",
+    "title": "Trendora",
+    "image": "trendora.png",
+    "description": "Trendora is a full-stack e-commerce application that lets users browse, purchase, and manage products with a smooth, responsive UI and a powerful admin dashboard.",
+    "shortDescription": "Full-stack e-commerce app with product management, cart, checkout and admin dashboard.",
+    "demoUrl": "https://trendora-xo3m.onrender.com/",
+    "codeUrl": "https://github.com/codedpool/trendora",
+    "technologies": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "TailwindCSS",
+      "Cloudinary"
+    ],
+    "category": "E-commerce",
+    "featured": false,
+    "features": [
+      "User Authentication: Register, login, and profile management.",
+      "Product Browsing: Filter and sort products by category, price, brand, etc.",
+      "Shopping Cart: Add/remove products, update quantities, and view cart summary.",
+      "Checkout Process: Secure payments via PayPal or Cash on Delivery (COD).",
+      "Order Tracking: View order history and order details.",
+      "Responsive Design: Mobile-first UI with Tailwind CSS.",
+      "Chatbot Support: Predefined FAQs for quick customer support.",
+      "Admin Dashboard: Manage users, products, and orders with image uploads via Cloudinary."
+    ],
+    "prerequisites": [
+      "Node.js (v18+)",
+      "npm or yarn",
+      "MongoDB instance",
+      "Cloudinary account (for image uploads)",
+      "PayPal sandbox credentials (for testing payments)"
+    ],
+    "techStack": {
+      "frontend": [
+        "React.js (Vite)",
+        "TailwindCSS",
+        "Redux Toolkit",
+        "React Router",
+        "Axios"
+      ],
+      "backend": [
+        "Node.js",
+        "Express.js",
+        "MongoDB with Mongoose",
+        "JWT",
+        "Multer",
+        "Cloudinary"
+      ],
+      "payments": [
+        "PayPal React SDK"
+      ],
+      "other": [
+        "ESLint",
+        "CORS",
+        "dotenv"
+      ]
+    }
+  },
+  {
+    "id": "tp-link",
+    "title": "TP-Link Campus Identity",
+    "image": "tplink.png",
+    "description": "An identity-based network security system for campuses that uses a student's admission number as the security boundary instead of physical location. It integrates with TP-Link Omada infrastructure to automatically assign VLANs and control network access based on who you are, not where you connect — the core idea being \"WHO you are determines network access, not WHERE you connect.\" A single admission number controls access across all campus systems, with automatic role-based VLAN assignment and complete identity-correlated audit trails.",
+    "shortDescription": "Zero-trust campus network where identity (admission number) — not location — controls access. Integrates with TP-Link Omada for automatic role-based VLAN assignment via RADIUS + Keycloak SSO.",
+    "codeUrl": "https://github.com/codedpool/TP-link",
+    "technologies": [
+      "Next.js 14",
+      "Keycloak",
+      "RADIUS",
+      "TP-Link Omada",
+      "Node.js"
+    ],
+    "category": "Network Security",
+    "featured": false,
+    "features": [
+      "Identity-Centric Zero Trust: Access is controlled by verified admission numbers rather than physical location — 'WHO you are determines network access, not WHERE you connect' — with role-based VLAN assignment for students, faculty, and admins, and complete identity-correlated audit trails.",
+      "Network Access Control: RADIUS protocol integration with TP-Link Omada dynamically assigns VLANs by user role, with real-time session management and monitoring.",
+      "Single Sign-On: Keycloak-backed OAuth2/OIDC SSO across campus portals (LMS, Library, Admin) gives users automatic network access with no manual configuration.",
+      "Real-Time Admin Console: Approve or block users with instant network impact, monitor live sessions with identity tracking, and manage accounts through Keycloak integration.",
+      "Omada Hardware Integration: Designed for TP-Link EAP660 HD / EAP245 access points, TL-SG3428 managed VLAN switches, an ER7206 VPN router, and OC200/OC300 Omada controllers.",
+      "Per-User Policy: Dynamic VLAN assignment and per-user bandwidth control enforced at the network edge."
+    ],
+    "prerequisites": [
+      "Node.js 18+",
+      "Docker & Docker Compose",
+      "Keycloak configured with campus realm settings",
+      "Git"
+    ],
+    "techStack": {
+      "frontend": [
+        "Next.js 14",
+        "NextAuth.js"
+      ],
+      "backend": [
+        "Node.js",
+        "Next.js API Routes",
+        "RADIUS simulation"
+      ],
+      "identityAndSecurity": [
+        "Keycloak",
+        "OAuth2 / OIDC",
+        "JWT"
+      ],
+      "hardware": [
+        "TP-Link Omada (OC200/OC300)",
+        "EAP660 HD / EAP245 APs",
+        "TL-SG3428 switch",
+        "ER7206 router"
+      ],
+      "protocols": [
+        "RADIUS",
+        "Dynamic VLAN assignment",
+        "Per-user bandwidth control"
+      ]
     }
   }
-    ,
-    {
-      "id": "trendora",
-      "title": "Trendora",
-      "image": "trendora.png",
-      "description": "Trendora is a full-stack e-commerce application that lets users browse, purchase, and manage products with a smooth, responsive UI and a powerful admin dashboard.",
-      "shortDescription": "Full-stack e-commerce app with product management, cart, checkout and admin dashboard.",
-  "demoUrl": "https://trendora-xo3m.onrender.com/",
-      "codeUrl": "https://github.com/codedpool/trendora",
-      "technologies": ["React", "Node.js", "MongoDB", "TailwindCSS", "Cloudinary"],
-      "category": "E-commerce",
-      "featured": false,
-      "features": [
-        "User Authentication: Register, login, and profile management.",
-        "Product Browsing: Filter and sort products by category, price, brand, etc.",
-        "Shopping Cart: Add/remove products, update quantities, and view cart summary.",
-        "Checkout Process: Secure payments via PayPal or Cash on Delivery (COD).",
-        "Order Tracking: View order history and order details.",
-        "Responsive Design: Mobile-first UI with Tailwind CSS.",
-        "Chatbot Support: Predefined FAQs for quick customer support.",
-        "Admin Dashboard: Manage users, products, and orders with image uploads via Cloudinary."
-      ],
-      "prerequisites": [
-        "Node.js (v18+)",
-        "npm or yarn",
-        "MongoDB instance",
-        "Cloudinary account (for image uploads)",
-        "PayPal sandbox credentials (for testing payments)"
-      ],
-      "techStack": {
-        "frontend": ["React.js (Vite)", "TailwindCSS", "Redux Toolkit", "React Router", "Axios"],
-        "backend": ["Node.js", "Express.js", "MongoDB with Mongoose", "JWT", "Multer", "Cloudinary"],
-        "payments": ["PayPal React SDK"],
-        "other": ["ESLint", "CORS", "dotenv"]
-      }
-    }
 ]

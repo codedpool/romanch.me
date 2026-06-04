@@ -82,6 +82,22 @@ export default function Experience() {
                           </a>
                         )}
                       </div>
+                      {exp.links && exp.links.length > 0 && (
+                        <div className="flex items-center gap-x-4 gap-y-1 mt-2 flex-wrap">
+                          {exp.links.map((link) => (
+                            <a
+                              key={link.url}
+                              href={link.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-1 text-gray-400 hover:text-white transition-colors text-sm"
+                            >
+                              <ExternalLink size={13} />
+                              <span>{link.label}</span>
+                            </a>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     {/* Date */}

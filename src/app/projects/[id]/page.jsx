@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ExternalLink, Github, ArrowLeft, Star, Calendar, Tag, Users } from 'lucide-react';
+import { ExternalLink, Github, ArrowLeft, Star, Calendar, Tag, Users, Sparkles, Award } from 'lucide-react';
 import projects from '@/data/projects.json';
 
 export default function ProjectDetailsPage() {
@@ -33,7 +33,7 @@ export default function ProjectDetailsPage() {
         src={src}
         alt={alt}
         onError={handleError}
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-contain p-6 drop-shadow-2xl"
       />
     );
   }
@@ -92,6 +92,11 @@ export default function ProjectDetailsPage() {
                 <span className="text-sm font-medium">Featured Project</span>
               </div>
             )}
+            {project.status && (
+              <div className="flex items-center gap-2 px-3 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 rounded-full">
+                <span className="text-sm font-medium">{project.status}</span>
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -111,24 +116,28 @@ export default function ProjectDetailsPage() {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-4">
-                <Button
-                  asChild
-                  className="bg-white text-black hover:bg-gray-200"
-                >
-                  <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    View Live Demo
-                  </a>
-                </Button>
-                <Button
-                  asChild
-                  className="bg-white text-black hover:bg-gray-200"
-                >
-                  <a href={project.codeUrl} target="_blank" rel="noopener noreferrer">
-                    <Github className="w-4 h-4 mr-2" />
-                    View Source Code
-                  </a>
-                </Button>
+                {project.demoUrl && (
+                  <Button
+                    asChild
+                    className="bg-white text-black hover:bg-gray-200"
+                  >
+                    <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      View Live Demo
+                    </a>
+                  </Button>
+                )}
+                {project.codeUrl && (
+                  <Button
+                    asChild
+                    className="bg-white text-black hover:bg-gray-200"
+                  >
+                    <a href={project.codeUrl} target="_blank" rel="noopener noreferrer">
+                      <Github className="w-4 h-4 mr-2" />
+                      View Source Code
+                    </a>
+                  </Button>
+                )}
               </div>
             </div>
 
@@ -162,6 +171,18 @@ export default function ProjectDetailsPage() {
 
       {/* Content */}
       <div className="container mx-auto px-6 py-12">
+        {project.highlight && (
+          <div className="mb-10 flex items-start gap-3 bg-gray-900 border border-amber-500/40 rounded-lg p-4">
+            <Award className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-gray-200 leading-relaxed font-medium">{project.highlight}</p>
+          </div>
+        )}
+        {project.aiNote && (
+          <div className="mb-10 flex items-start gap-3 bg-gray-900 border border-amber-500/30 rounded-lg p-4">
+            <Sparkles className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-gray-300 leading-relaxed">{project.aiNote}</p>
+          </div>
+        )}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-12">
@@ -232,7 +253,7 @@ export default function ProjectDetailsPage() {
                   <Users className="w-5 h-5 text-gray-400" />
                   <div>
                     <p className="text-sm text-gray-400">Status</p>
-                    <p className="text-white">{project.featured ? 'Featured' : 'Active'}</p>
+                    <p className="text-white">{project.status || (project.featured ? 'Featured' : 'Active')}</p>
                   </div>
                 </div>
               </div>
